@@ -1,0 +1,29 @@
+name: Update HTML File
+
+on:
+  push:
+    branches:
+      - main   # main 브랜치에 푸시할 때마다 트리거됨
+    paths:
+      - "week/01.mon.html"  # 이 파일에 변경이 있을 때만 실행
+
+jobs:
+  update-file:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Update 01.mon.html
+      run: |
+        echo "파일 수정 중..."
+        # 예시로 간단한 수정 작업을 추가
+        echo "<!-- 자동 업데이트된 내용 -->" >> week/01.mon.html
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "your-email@example.com"
+        git add week/01.mon.html
+        git commit -m "자동 업데이트: 01.mon.html"
+        git push
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
