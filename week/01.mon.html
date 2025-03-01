@@ -82,7 +82,7 @@
         const encodedContent = btoa(unescape(encodeURIComponent(content))); // 내용 인코딩
 
         const url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${filePath}`;
-
+        console.log("GitHub Token:", githubToken);
         try {
           // 파일 정보를 가져오기 위한 API 요청
           const response = await fetch(url, {
