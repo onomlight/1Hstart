@@ -59,8 +59,8 @@
         <td>(칠초돌봄)김찬호</td>
       </tr>
     </table>
-    <script>
-     document.addEventListener("DOMContentLoaded", function () {
+    <!-- <script>
+  document.addEventListener("DOMContentLoaded", function () {
   const repoOwner = "onomlight";
   const repoName = "1Hstart";
 
@@ -77,9 +77,6 @@
 
   // GitHub Actions를 트리거하는 함수
   async function triggerWorkflow() {
-    const content = document.documentElement.outerHTML; // 페이지 전체 HTML 내용 가져오기
-    const encodedContent = btoa(unescape(encodeURIComponent(content))); // 내용 인코딩
-
     try {
       // GitHub API를 사용해 워크플로우 실행
       const response = await fetch(
@@ -93,9 +90,6 @@
           },
           body: JSON.stringify({
             ref: "main", // 브랜치 이름
-            inputs: {
-              content: encodedContent, // 수정된 내용 전달
-            },
           }),
         }
       );
@@ -117,7 +111,7 @@
   document.querySelector("button[onclick='checkPassword()']").onclick = checkPassword;
   document.getElementById("saveButton").onclick = triggerWorkflow;
 });
-    </script>
+    </script> -->
     <style>
       * {
         font-size: 1.35rem;
