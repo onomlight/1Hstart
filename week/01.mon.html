@@ -8,7 +8,7 @@
   <body>
     <button onclick="checkPassword()">수정하기</button>
     <button id="saveButton" style="display: none">저장하기</button>
-      저장하기
+      
     </button>
     <table border="1" contenteditable="false">
       <tr>
@@ -60,66 +60,63 @@
       </tr>
     </table>
     <script>
-      const repoOwner = "onomlight";
-      const repoName = "1Hstart";
-      const filePath = "week/01.mon.html";
+     document.addEventListener("DOMContentLoaded", function () {
+  const repoOwner = "onomlight";
+  const repoName = "1Hstart";
 
-      // 비밀번호 입력 후 수정 가능하게 하는 함수
-      document.addEventListener("DOMContentLoaded", function () {
-        // 비밀번호 입력 후 수정 가능하게 하는 함수
-        function checkPassword() {
-          const password = prompt("암호를 입력하세요:");
-          if (password === "1234") {
-            document.querySelector("table").contentEditable = true;
-            document.getElementById("saveButton").style.display = "inline"; // 저장 버튼 보이기
-          } else {
-            alert("암호가 틀렸습니다.");
-          }
+  // 비밀번호 입력 후 수정 가능하게 하는 함수
+  function checkPassword() {
+    const password = prompt("암호를 입력하세요:");
+    if (password === "1234") {
+      document.querySelector("table").contentEditable = true;
+      document.getElementById("saveButton").style.display = "inline"; // 저장 버튼 보이기
+    } else {
+      alert("암호가 틀렸습니다.");
+    }
+  }
+
+  // GitHub Actions를 트리거하는 함수
+  async function triggerWorkflow() {
+    const content = document.documentElement.outerHTML; // 페이지 전체 HTML 내용 가져오기
+    const encodedContent = btoa(unescape(encodeURIComponent(content))); // 내용 인코딩
+
+    try {
+      // GitHub API를 사용해 워크플로우 실행
+      const response = await fetch(
+        `https://api.github.com/repos/${repoOwner}/${repoName}/actions/workflows/update-file.yml/dispatches`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `token ${process.env.REPO_TOKEN}`, // GitHub Secrets에서 토큰 가져오기
+            Accept: "application/vnd.github.v3+json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ref: "main", // 브랜치 이름
+            inputs: {
+              content: encodedContent, // 수정된 내용 전달
+            },
+          }),
         }
+      );
 
-        // GitHub Actions를 트리거하는 함수
-        async function triggerWorkflow() {
-          const content = document.documentElement.outerHTML; // 페이지 전체 HTML 내용 가져오기
-          const encodedContent = btoa(unescape(encodeURIComponent(content))); // 내용 인코딩
+      if (response.ok) {
+        alert("GitHub Actions가 성공적으로 실행되었습니다!");
+      } else {
+        const errorData = await response.json();
+        console.error("워크플로우 실행 실패:", errorData);
+        alert("워크플로우 실행 실패! 콘솔에서 오류를 확인하세요.");
+      }
+    } catch (error) {
+      console.error("오류 발생:", error);
+      alert("GitHub Actions 실행 중 오류가 발생했습니다.");
+    }
+  }
 
-          try {
-            // GitHub API를 사용해 워크플로우 실행
-            const response = await fetch(
-              "https://api.github.com/repos/onomlight/1Hstart/actions/workflows/update-file.yml/dispatches",
-              {
-                method: "POST",
-                headers: {
-                  Authorization: `token ghp_your_personal_access_token_here`, // GitHub 토큰 입력
-                  Accept: "application/vnd.github.v3+json",
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  ref: "main", // 브랜치 이름
-                  inputs: {
-                    content: encodedContent, // 수정된 내용 전달
-                  },
-                }),
-              }
-            );
-
-            if (response.ok) {
-              alert("GitHub Actions가 성공적으로 실행되었습니다!");
-            } else {
-              const errorData = await response.json();
-              console.error("워크플로우 실행 실패:", errorData);
-              alert("워크플로우 실행 실패! 콘솔에서 오류를 확인하세요.");
-            }
-          } catch (error) {
-            console.error("오류 발생:", error);
-            alert("GitHub Actions 실행 중 오류가 발생했습니다.");
-          }
-        }
-
-        // 버튼에 이벤트 리스너 추가
-        document.querySelector("button[onclick='checkPassword()']").onclick =
-          checkPassword;
-        document.getElementById("saveButton").onclick = triggerWorkflow;
-      });
+  // 버튼에 이벤트 리스너 추가
+  document.querySelector("button[onclick='checkPassword()']").onclick = checkPassword;
+  document.getElementById("saveButton").onclick = triggerWorkflow;
+});
     </script>
     <style>
       * {
