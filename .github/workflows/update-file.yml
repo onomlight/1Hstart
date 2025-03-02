@@ -3,9 +3,9 @@ name: Update HTML File
 on:
   push:
     branches:
-      - main # main 브랜치에 푸시할 때마다 트리거됨
+      - main
     paths:
-      - "week/01.mon.html" # 이 파일에 변경이 있을 때만 실행
+      - "week/01.mon.html"
 
 jobs:
   update-file:
@@ -16,14 +16,14 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Update 01.mon.html
+        env:
+          REPO_TOKEN: ${{ secrets.REPO_TOKEN }} # 여기서 REPO_TOKEN을 사용
         run: |
           echo "파일 수정 중..."
-          # 예시로 간단한 수정 작업을 추가
-          echo "<!-- 자동 업데이트된 내용 -->" >> week/01.mon.html
+          # 파일 내용을 특정 내용으로 덮어쓰기
+          echo "<html><body><h1>업데이트된 내용</h1></body></html>" > week/01.mon.html
           git config --global user.name "GitHub Actions"
-          git config --global user.email "your-email@example.com"
+          git config --global user.email "actions@github.com"
           git add week/01.mon.html
           git commit -m "자동 업데이트: 01.mon.html"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          git push
