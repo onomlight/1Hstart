@@ -29,7 +29,7 @@ tr:last-child td {
 }
 td:first-child {
   font-weight: 600;
-  width: 120px;
+  width: 16%;
   color: #2d3a5e;
   background: #f1f4ff;
 }
@@ -40,9 +40,21 @@ tr:nth-child(even) td {
 .time_nub {
   text-align: center;
 }
+p {
+  width: 33%;
+}
 
 .highlight {
   background: #ffe9a8;
   font-weight: 700;
   color: #5a4300;
+}
+@media screen and (min-width: 375px) and (max-width: 768px) {
+  body {
+    padding: 0;
+  }
+  .time_nub {
+    /* padding-right: 0;
+    width: 50%; */
+  }
 }
